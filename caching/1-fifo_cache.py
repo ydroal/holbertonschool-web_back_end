@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-'''BasicCache module
+'''FIFOCache module
 '''
 from base_caching import BaseCaching
 
 
 class FIFOCache(BaseCaching):
-    ''' BasicCache defines:
+    ''' FIFOCache defines:
     '''
     def __init__(self):
         ''' Initiliaze
@@ -13,7 +13,9 @@ class FIFOCache(BaseCaching):
         super().__init__()
 
     def put(self, key, item):
-        ''' Assigns item value for the key key in self.cache_data
+        '''
+        Assign to the dictionary self.cache_data the item value
+        for the key key
         '''
         if key is None or item is None:
             return
