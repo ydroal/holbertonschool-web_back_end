@@ -12,7 +12,6 @@ def index_range(page: int, page_size: int) -> Tuple[int]:
         page (int): The page number (start from 1)
         page_size (int): The number of items per page
 
-
     Returns:
         Tuple: size two containing a start index and an end index
     '''
@@ -45,6 +44,16 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
+        """
+        Returns a specific page of the dataset.
+
+        Args:
+            page (int, optional): The page number (start from 1)
+            page_size (int, optional): The number of items per page
+
+        Returns:
+            List[List]: The page of the dataset.
+        """
         assert isinstance(page, int) and page > 0
         assert isinstance(page_size, int) and page_size > 0
 
