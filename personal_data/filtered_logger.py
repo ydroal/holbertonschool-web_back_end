@@ -7,6 +7,9 @@ import re
 import logging
 
 
+PII_FIELDS = ('email', 'phone', 'ssn', 'password', 'ip')
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
@@ -55,3 +58,32 @@ def filter_datum(fields: List[str], redaction: str, message: str,
         regex = f'{field}=([^ {separator}]*)'
         message = re.sub(regex, f"{field}={redaction}", message)
     return message
+
+
+def get_logger() -> logging.Logger:
+    '''
+    Creates and returns a logging.Logger object with the specified settings.
+
+    Returns:
+        logging.Logger object
+    '''
+    # loggerオブジェクトの作成
+    logger = logging.getLogger('user_data')
+
+    # user_dataからの最低出力レベルをDEBUGに設定
+    logger.setLevel(logging.INFO)
+
+    # Streamハンドラクラスをインスタンス化
+    st_handler = logging.StreamHandler()
+
+    # インスタンス化したハンドラをuser_dataに渡す
+    logger.addHandler(st_handler)
+
+    # RedactingFormatterをハンドラに設定
+    formatter = RedactingFormatter(PII_FIELDS)
+    st_handler.setFormatter(formatter)
+
+    # メッセージの伝播を停止
+    logger.propagate = False
+
+    return logger
