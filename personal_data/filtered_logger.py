@@ -15,7 +15,7 @@ class RedactingFormatter(logging.Formatter):
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields):
+    def __init__(self, fields: List[str]):
         # logging.Formatterクラスの初期化メソッドに、ログメッセージのフォーマット"FORMAT"を指定
         # デフォルトのログメッセージフォーマットをFORMATに設定
         super(RedactingFormatter, self).__init__(self.FORMAT)
