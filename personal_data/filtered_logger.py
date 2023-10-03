@@ -7,7 +7,7 @@ import re
 import logging
 
 
-PII_FIELDS = ('email', 'phone', 'ssn', 'password', 'ip')
+PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
 
 
 class RedactingFormatter(logging.Formatter):
@@ -76,12 +76,13 @@ def get_logger() -> logging.Logger:
     # Streamハンドラクラスをインスタンス化
     st_handler = logging.StreamHandler()
 
-    # インスタンス化したハンドラをuser_dataに渡す
-    logger.addHandler(st_handler)
-
     # RedactingFormatterをハンドラに設定
     formatter = RedactingFormatter(PII_FIELDS)
+    # st_handlerによる出力フォーマットを先で定義した'formatter'に設定
     st_handler.setFormatter(formatter)
+
+    # インスタンス化したハンドラをuser_dataに渡す
+    logger.addHandler(st_handler)
 
     # メッセージの伝播を停止
     logger.propagate = False
