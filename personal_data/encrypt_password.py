@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+'''Module to return a salted, hashed password, which is a byte string'''
 import bcrypt
 
 
