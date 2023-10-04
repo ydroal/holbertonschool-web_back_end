@@ -58,7 +58,7 @@ def filter_datum(fields: List[str], redaction: str, message: str,
          log message obfuscated
     '''
     for field in fields:
-        regex = f'{field}=([^ {separator}]*)'
+        regex = f'{field}=([^{separator}]*)'
         message = re.sub(regex, f"{field}={redaction}", message)
     return message
 
@@ -110,3 +110,34 @@ def get_db() -> MySQLConnection:
     )
 
     return connection
+
+
+logger = get_logger()
+
+
+def main():
+    '''
+    execute main program.
+    Connects to the database, retrieves user data, logs it.
+    '''
+
+    db = get_db()
+    cursor = db.cursor()
+
+    query = ("SELECT * FROM users;")
+    cursor.execute(query)
+
+    for row in cursor:
+        message = (
+            f'name={row[0]}; email={row[1]}; phone={row[2]}; ssn={row[3]}; '
+            f'password={row[4]}; ip={row[5]}; last_login={row[6]}; '
+            f'user_agent={row[7]};'
+        )
+        logger.info(message)
+
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main()
