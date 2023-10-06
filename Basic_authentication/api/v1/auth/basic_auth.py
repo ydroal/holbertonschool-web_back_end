@@ -48,3 +48,25 @@ class BasicAuth(Auth):
         # Base64のデコード時に無効なBase64文字列が渡されるとbinascii.Errorを発生させる
         except Exception:
             return None
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> (str, str):
+        '''
+        Args:
+        decoded_base64_authorization_header (str): Base64 decoded value
+
+        Returns:
+        Tuple[str, str]: user email and password from the Base64 decoded value
+        '''
+
+        if not decoded_base64_authorization_header:
+            return (None, None)
+
+        if not isinstance(decoded_base64_authorization_header, str):
+            return (None, None)
+
+        if ':' not in decoded_base64_authorization_header:
+            return (None, None)
+
+        auth_data = decoded_base64_authorization_header.split(':')
+        return (auth_data[0], auth_data[1])
