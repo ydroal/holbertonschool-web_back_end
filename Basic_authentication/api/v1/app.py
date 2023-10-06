@@ -8,7 +8,7 @@ from api.v1.auth.auth import Auth
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
 import os
-
+from typing import Optional
 
 app = Flask(__name__)
 app.register_blueprint(app_views)
@@ -21,7 +21,17 @@ if os.getenv('AUTH_TYPE') == 'auth':
     print(auth)
 
 
-def before_handler():
+def before_handler() -> Optional[Response]:
+    '''Handle actions before each request.
+
+    This function checks for necessary authentication headers and permissions
+    before the request.
+
+    Returns:
+        None: If the authentication headers and permissions are present.
+        abort(401): If the authentication header is missing.
+        abort(403): If the current user is not found.
+    '''
     if auth is None:
         return
 
