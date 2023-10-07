@@ -31,12 +31,12 @@ def view_one_user(user_id: str = None) -> str:
             abort(404)
         # 認証されたユーザの情報をJSONレスポンスとして返す
         return jsonify(request.current_user.to_json())
-    
+
     # 認証が行われていない、認証情報が無効などで現在のリクエストに関連付けられたユーザが存在しない
     # URLに<user_id>が提供されているので、通常、このケースは発生しない
     if user_id is None:
         abort(404)
-        
+
     # 認証されているユーザー
     user = User.get(user_id)
     if user is None:
@@ -131,11 +131,3 @@ def update_user(user_id: str = None) -> str:
         user.last_name = rj.get('last_name')
     user.save()
     return jsonify(user.to_json()), 200
-
-@app_views.route('/users/me', methods=['GET'], strict_slashes=False)
-def retrieve_user() -> str:
-    """ GET /api/v1/users/me
-    Return:
-      - User object.
-    """
-    
