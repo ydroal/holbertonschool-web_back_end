@@ -33,7 +33,7 @@ def before_handler() -> None:
 
     Returns:
         None: If the authentication headers and permissions are present.
-        abort(401): If the authentication header is missing.
+        abort(401): If the authentication header and cookie valueis is missing.
         abort(403): If the current user is not found.
     '''
     if auth is None:
@@ -44,12 +44,14 @@ def before_handler() -> None:
         [
             '/api/v1/status/',
             '/api/v1/unauthorized/',
-            '/api/v1/forbidden/'
+            '/api/v1/forbidden/',
+            '/api/v1/auth_session/login/'
         ]
     ):
         return
 
-    if auth.authorization_header(request) is None:
+    if auth.authorization_header(request) is None and \
+            auth.session_cookie(request) is None:
         abort(401)
 
     if auth.current_user(request) is None:
