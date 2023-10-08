@@ -2,7 +2,7 @@
 """ Module of views that handles all routes for the Session authentication
 """
 from os import getenv
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.user import User
 
@@ -48,3 +48,26 @@ def login():
     res.set_cookie(SESSION_NAME, session_id)
 
     return res
+
+
+@app_views.route(
+        '/auth_session/logout',
+        methods=['DELETE'],
+        strict_slashes=False
+        )
+def logout():
+    """
+    DELETE /auth_session/logout
+
+    Deleting the Session ID contains in the request as cookie
+
+    Return:
+      dict: An empty JSON dictionary with status code 200 if successful,
+      otherwise aborts with 404.
+    """
+
+    from api.v1.app import auth
+    if not auth.destroy_session(request):
+        abort(404)
+    else:
+        return jsonify({}), 200
