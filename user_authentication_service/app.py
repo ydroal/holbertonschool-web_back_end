@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route('/')
 def Bienvenue():
     """ returns a message when the route / is requested """
-    return jsonify({"status": "OK"})
+    return jsonify({"message": "Bienvenue"})
 
 
 if __name__ == "__main__":
