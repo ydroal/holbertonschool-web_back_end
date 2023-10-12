@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Route module for the API
 """
-from flask import Flask, jsonify, request, abort
+from flask import Flask, jsonify, request, abort, redirect
 from auth import Auth
 
 
@@ -43,7 +43,7 @@ def users():
 @app.route('/sessions', methods=['POST'], strict_slashes=False)
 def login():
     """
-    POST /users
+    POST /sessions
     Expect form data:
       - email: user's email
       - password: user's password
@@ -66,6 +66,25 @@ def login():
     resp = jsonify({"email": user_email, "message": "logged in"})
     resp.set_cookie("session_id", user_session_id)
     return resp
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout():
+    """
+    DELETE /sessions
+    Expect form data:
+      - session_id: user's session id
+
+    Return:
+      - redirect to root page '/'
+    """
+    user_session_id = request.cookies.get("session_id")
+
+    user = AUTH.get_user_from_session_id(user_session_id)
+    if not user:
+        abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect("/")
 
 
 if __name__ == "__main__":
