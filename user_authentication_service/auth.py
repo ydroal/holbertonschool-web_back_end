@@ -2,6 +2,7 @@
 """ Define Auth class
 """
 import bcrypt
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 import uuid
 from db import DB
@@ -97,3 +98,20 @@ class Auth:
         self._db.update_user(user.id, session_id=session_id)
 
         return user.session_id
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """
+        Fetch login user's data from session_id
+
+        Args:
+        session_id (str): user's session_id
+
+        Returns:
+        The corresponding User object with session_id
+        If the session ID is None or no user is found, None
+        """
+        try:
+            user = self._db.find_user_by(session_id=session_id)
+            return user
+        except (NoResultFound, InvalidRequestError):
+            return None
