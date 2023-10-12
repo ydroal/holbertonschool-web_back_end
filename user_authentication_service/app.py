@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Route module for the API
 """
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from auth import Auth
 
 
@@ -38,6 +38,34 @@ def users():
 
     except ValueError:
         return jsonify({"message": "email already registered"}), 400
+
+
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
+def login():
+    """
+    POST /users
+    Expect form data:
+      - email: user's email
+      - password: user's password
+
+    Return:
+      - JSON {"email": "<user email>", "message": "logged in"}
+      - or 401 if the login information is incorrect
+    """
+    user_email = request.form.get('email')
+    user_password = request.form.get('password')
+
+    if not user_email or not user_password:
+        abort(401)
+
+    if not AUTH.valid_login(user_email, user_password):
+        abort(401)
+
+    user_session_id = AUTH.create_session(user_email)
+
+    resp = jsonify({"email": user_email, "message": "logged in"})
+    resp.set_cookie("session_id", user_session_id)
+    return resp
 
 
 if __name__ == "__main__":
