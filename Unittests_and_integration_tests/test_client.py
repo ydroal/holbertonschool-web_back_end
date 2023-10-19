@@ -4,6 +4,7 @@ Test module
 """
 import unittest
 from unittest.mock import patch
+from unittest.mock import PropertyMock
 from utils import memoize
 from parameterized import parameterized
 from client import GithubOrgClient
@@ -29,3 +30,20 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(test_class.org, mock_get.return_value)
         mock_get.assert_called_once_with(
             test_class.ORG_URL.format(org=test_class._org_name))
+
+    def test_public_repos_url(self):
+        """
+        Test _public_repos_url method
+        """
+
+        test_class = GithubOrgClient("google")
+        with patch("client.GithubOrgClient.org",
+                   new_callable=PropertyMock) as mock_org:
+            mock_payload = {
+                "repos_url": "https://api.github.com/orgs/google/repos"
+                }
+            mock_org.return_value = mock_payload
+
+            self.assertEqual(test_class._public_repos_url,
+                             "https://api.github.com/orgs/google/repos")
+            mock_org.assert_called_once()
