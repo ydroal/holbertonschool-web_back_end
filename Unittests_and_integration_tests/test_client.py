@@ -5,9 +5,11 @@ Test module
 import unittest
 from unittest.mock import patch
 from unittest.mock import PropertyMock
+from unittest.mock import Mock
 from utils import memoize
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -104,3 +106,51 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         self.assertEqual(GithubOrgClient.has_license(
             repo, license_key), expected_output)
+
+
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    Integration test class for client module
+    """
+    get_patcher = patch('requests.get')
+
+    @classmethod
+    def setUpClass(cls):
+        """
+        Define setUpClass
+        """
+        def side_effect(url):
+            response = Mock()
+            for payload in TEST_PAYLOAD:
+                if payload[0]["repos_url"] == url:
+                    response.json.return_value = payload[1]
+                    return response
+
+        cls.get_patcher.start().side_effect = side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Define tearDownClass
+        """
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """
+        Test public_repos method
+        Checks if the method returns the expected list of repository names
+        based on the license.
+        """
+        test_class = GithubOrgClient("google")
+        with patch("client.GithubOrgClient._public_repos_url",
+                   new_callable=PropertyMock) as mock_url:
+
+            mock_url.return_value = "https://api.github.com/orgs/google/repos"
+            repos = test_class.public_repos(license="bsl-1.0")
+            self.assertIn("cpp-netlib", repos)
+            repos = test_class.public_repos(license="bsd-3-clause")
+            self.assertIn("episodes.dart", repos)
