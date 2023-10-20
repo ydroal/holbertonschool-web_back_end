@@ -948,3 +948,28 @@ TEST_PAYLOAD = [
     ['dagger', 'kratu', 'traceur-compiler', 'firmata.py'],
   )
 ]
+org_payload = {"repos_url": "https://api.github.com/orgs/google/repos"}
+repos_payload = [
+    {
+        "name": "episodes.dart",
+        "license": {
+            "key": "bsd-3-clause",
+            "name": "BSD 3-Clause \"New\" or \"Revised\" License",
+            "spdx_id": "BSD-3-Clause",
+            "url": "https://api.github.com/licenses/bsd-3-clause",
+            "node_id": "MDc6TGljZW5zZTU="
+        },
+    },
+    {
+        "name": "cpp-netlib",
+        "license": {
+            "key": "bsl-1.0",
+            "name": "Boost Software License 1.0",
+            "spdx_id": "BSL-1.0",
+            "url": "https://api.github.com/licenses/bsl-1.0",
+            "node_id": "MDc6TGljZW5zZTI4"
+        },
+    }
+]  # リポジトリに関する情報を含む辞書のリスト
+expected_repos = ["episodes.dart"]  # 期待されるリポジトリ名のリスト
+apache2_repos = []  # Apache 2ライセンスを持つリポジトリ名のリスト
