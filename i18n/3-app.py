@@ -2,9 +2,11 @@
 """
 Flask app
 """
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_babel import Babel, gettext
-from flask import request
+"""
+gettext - Function to translate a string.
+"""
 
 
 class Config(object):
