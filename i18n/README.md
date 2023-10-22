@@ -20,3 +20,18 @@
 - All your functions and methods should have a documentation (python3 -c 'print(__import__("my_module").my_function.__doc__)' and python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)')
 - A documentation is not a simple word, it’s a real sentence explaining what’s the purpose of the module, class or method (the length of it will be verified)
 - All your functions and coroutines must be type-annotated.
+
+
+## Library Versions
+
+The following library versions were used for this project:
+
+- Babel==2.13.0
+- Flask==1.1.2
+- Flask-Babel==2.0.0
+- Jinja2==2.11.3
+
+## Additional Notes
+
+The code in this project utilizes certain extensions and decorators that required the above-mentioned library versions.　　
+The selection of the appropriate versions was vital to ensure the correct behavior of these extensions and decorators.
