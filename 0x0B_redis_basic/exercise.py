@@ -8,9 +8,26 @@ from typing import Union, Optional, Callable
 from functools import wraps
 
 
+def call_history(method: Callable) -> Callable:
+    """
+    Decorator to store the history of inputs and outputs of store method
+    """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """ Wrapper function
+        """
+        input_key = f'{method.__qualname__}:inputs'
+        output_key = f'{method.__qualname__}:outputs'
+        random_key = method(self, *args, **kwargs)
+        self._redis.rpush(input_key, str(args))
+        self._redis.rpush(output_key, random_key)
+        return random_key
+    return wrapper
+
+
 def count_calls(method: Callable) -> Callable:
     """
-    Decolator to count the number of times a store method is called
+    Decorator to count the number of times a store method is called
     """
     @wraps(method)
     def wrapper(self, *args, **kwargs):
@@ -26,12 +43,13 @@ class Cache():
     """ Define Cache class
     """
     def __init__(self):
-        """ Initialize a Cace instance
+        """ Initialize a Cache instance
         """
         self._redis = redis.Redis()
         self._redis.flushdb()
 
     @count_calls
+    @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
         random_key = str(uuid.uuid4())
         self._redis.set(random_key, data)
