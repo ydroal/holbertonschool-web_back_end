@@ -39,7 +39,7 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
-def replay(method):
+def replay(method: Callable):
     """
     Display the history of calls of a particular function
     """
@@ -67,6 +67,9 @@ class Cache():
     @count_calls
     @call_history
     def store(self, data: Union[str, bytes, int, float]) -> str:
+        """
+        Stores the input data using a random generated key
+        """
         random_key = str(uuid.uuid4())
         self._redis.set(random_key, data)
 
