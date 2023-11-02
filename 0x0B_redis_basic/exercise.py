@@ -39,6 +39,22 @@ def count_calls(method: Callable) -> Callable:
     return wrapper
 
 
+def replay(method):
+    """
+    Display the history of calls of a particular function
+    """
+    cache = method.__self__
+    method_name = method.__qualname__
+    print(f'{method_name} was called {int(cache.get(method_name))} times:')
+    input_key = f'{method_name}:inputs'
+    output_key = f'{method_name}:outputs'
+    inputs = cache._redis.lrange(input_key, 0, -1)
+    outputs = cache._redis.lrange(output_key, 0, -1)
+
+    for input, output in zip(inputs, outputs):
+        print(f'{method_name}(*{input.decode()}) -> {output.decode()}')
+
+
 class Cache():
     """ Define Cache class
     """
