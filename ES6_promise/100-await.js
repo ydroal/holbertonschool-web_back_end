@@ -6,16 +6,19 @@ export default async function asyncUploadUser() {
     user: null,
   };
 
-  const results = await Promise.allSettled([uploadPhoto(), createUser()]);
-  results.forEach((result, index) => {
-    if (result.status === 'rejected') {
-      return res;
-    }
-    if (index === 0) {
-      res.photo = result.value;
-    } else {
-      res.user = result.value;
-    }
-  });
-  return res;
+  try {
+    const results = await Promise.allSettled([uploadPhoto(), createUser()]);
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        if (index === 0) {
+          res.photo = result.value;
+        } else {
+          res.user = result.value;
+        }
+      }
+    });
+    return res;
+  } catch (error) {
+    return res;
+  }
 }
