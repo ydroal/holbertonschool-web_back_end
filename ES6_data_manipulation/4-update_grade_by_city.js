@@ -6,6 +6,8 @@ export default function updateStudentGradeByCity(array, city, newGrades) {
     newGrades.forEach((element) => {
       if (element.studentId === student.id) {
         grade.grade = element.grade;
+      } else {
+        grade.grade = 'N/A';
       }
     });
     return { ...student, ...grade };
