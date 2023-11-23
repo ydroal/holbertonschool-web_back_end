@@ -3,7 +3,7 @@ export default function cleanSet(set, startString) {
 
   let newStr = '';
   for (let str of set) {
-    if (str.startsWith(startString)) {
+    if (str && str.startsWith(startString)) {
       str = `${str.replace(startString, '')}-`;
       newStr = newStr.concat(str);
     }
