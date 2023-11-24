@@ -16,9 +16,9 @@ process.on('SIGINT', () => {
   process.exit(0);
 });
 
-// 入力された１行を読み込んだ時のイベント処理
-process.stdin.on('data', (inputData) => {
-  // 末尾の改行を取り除く。
-  const input = inputData.trim();
-  console.log(`Your name is: ${input}`);
+process.stdin.on('readable', () => {
+  const input = process.stdin.read();
+  if (input !== null) {
+    process.stdout.write(`Your name is: ${input}`);
+  }
 });
