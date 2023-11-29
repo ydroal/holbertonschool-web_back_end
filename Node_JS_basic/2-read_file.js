@@ -1,12 +1,13 @@
 const fs = require('fs');
-const fsp = require('fs').promises;
 
-async function countStudents(path) {
-  if (!fs.existsSync(path)) {
+function countStudents(path) {
+  if (!(fs.existsSync(path))) {
     throw new Error('Cannot load the database');
   }
 
-  const text = await fsp.readFile(path, 'utf8');
+  const text = fs.readFileSync(path, 'utf8');
+  if (!text) throw new Error('Cannot load the database');
+
   const data = text.split('\n');
   const students = data.slice(1).filter((line) => line.length > 0);
   console.log(`Number of students: ${students.length}`);
