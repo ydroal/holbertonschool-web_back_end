@@ -1,5 +1,9 @@
 function calculateNumber(a, b) {
-  return Math.round(a) + Math.round(b);
+  const aRounded = Math.round(a);
+  const bRounded = Math.round(b);
+
+  return aRounded + bRounded;
 }
 
 module.exports = calculateNumber;
+
