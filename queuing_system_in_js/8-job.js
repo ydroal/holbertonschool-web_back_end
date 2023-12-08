@@ -6,7 +6,9 @@ function createPushNotificationsJobs (jobs, queue) {
   if (!Array.isArray(jobs)) throw new Error('Jobs is not an array');
   
   jobs.forEach(element => {
-    const job = queue.create('push_notification_code_3', element).save(err => {
+    // job.save() を呼び出す前に job オブジェクトを定義
+    const job = queue.create('push_notification_code_3', element);
+    job.save(err => {
       if (err) {
         console.error(err);
         return;
